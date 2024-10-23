@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좋은 말, 로또 번호 추첨기</title>
+    <style>
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            background-color: #f0f0f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .lotto-section {
+            padding: 40px;
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+            border-right: 2px solid #ddd;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .lotto-numbers {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .number {
+            font-size: 22px;
+            font-weight: bold;
+            background-color: white;
+            border: 2px solid #4CAF50;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #4CAF50;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn {
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #ffffff;
+            color: #4CAF50;
+            border: 2px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, transform 0.2s;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: white;
+        }
+        .history-section {
+            padding: 40px;
+            width: 300px;
+            background-color: #ffffff;
+            color: #333;
+        }
+        .history-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #4CAF50;
+            text-align: center;
+        }
+        .history {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            height: 280px;
+            overflow-y: auto;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .history p {
+            margin: 10px 0;
+            font-size: 16px;
+            text-align: center;
+            color: #555;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        .history p.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* 스크롤바 스타일 */
+        .history::-webkit-scrollbar {
+            width: 8px;
+        }
+        .history::-webkit-scrollbar-thumb {
+            background-color: #4CAF50;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="lotto-section">
+            <h1>좋은 말, 로또 번호 추첨기</h1>
+            <div id="lotto-numbers" class="lotto-numbers"></div>
+            <button class="btn" onclick="generateLottoNumbers()">번호 추첨하기</button>
+            <div id="message"></div>
+        </div>
+        
+        <div class="history-section">
+            <div class="history-title">추첨된 번호 기록</div>
+            <div id="history" class="history"></div>
+        </div>
+    </div>
+
+    <script>
+        const messages = [
+    "오늘은 당첨운이! 🍀", "당첨 되셨으면 좋겠어요! 🎉", "좋은 날이 올꺼에요! 🌟", "행운을 기원해요! ✨",
+    "이번엔 느낌이 좋아요! 😄", "당첨까지 조금만 더! 💪", "행복한 하루 보내세요! 😊", "좋은 결과를 기다려요! 🌈",
+    "이번엔 꼭 맞을 거예요! 👍", "끝까지 포기하지 마세요! 🚀", "도전은 언제나 가치 있어요! 💥", 
+    "당첨의 기운이 느껴져요! 🔮", "언젠간 분명 될 거예요! 💫", "행운이 곧 당신에게 올 거예요! 🍀", 
+    "당첨되면 뭐 할지 생각해 보셨나요? 💭", "희망을 가지세요! 🌻", "성공의 길로 가고 있어요! 🏆", 
+    "행운은 준비된 자의 것! 📅", "이번엔 반드시! 🎯", "조금만 더 힘내세요! 💪", "매번 더 가까워지고 있어요! 🚶‍♂️", 
+    "기다리던 그날이 올 거예요! 📅", "행운이 당신 곁에! 💖", "마음속으로 소원을 빌어보세요! 🌠", 
+    "이제 곧 당신 차례예요! 👏", "믿고 기다려보세요! 🌟", "당첨될 운명이에요! 🎉", "언젠가는 꼭 이뤄질 거예요! 🌈", 
+    "오늘은 느낌이 다르네요! 🤞", "행복한 하루 보내세요! 😊", "마음 속으로 원하는 걸 생각해보세요! 💭", 
+    "행운이 올 때까지 포기하지 마세요! 💪", "성공의 순간이 다가오고 있어요! 🏆", "다음은 당신 차례일 거예요! 🎯", 
+    "당첨을 꿈꾸세요! 🌟", "운명은 스스로 만드는 거예요! 🛠️", "희망은 언제나 있어요! 🌻", 
+    "당신을 위한 행운이 오고 있어요! 🍀", "마지막까지 힘내세요! 💪", "웃는 얼굴로 기다려보세요! 😊", 
+    "행운이 곧 찾아올 거예요! 🌠", "행운은 노력하는 사람에게 옵니다! 📅", "당첨될 순간이 다가오고 있어요! 🏆", 
+    "좋은 소식이 들릴 거예요! 📢", "자신감을 가지고 도전하세요! 💪", "오늘은 행운이 가득할 거예요! 🍀", 
+    "마음을 편히 가지고 기다려보세요! 🧘‍♂️", "당신을 위한 행운이 준비되고 있어요! 🎉", "성공할 날이 다가오고 있어요! 🏆", 
+    "운명은 당신 손에 달려있어요! ✋", "기다림의 끝이 보입니다! 👀", "좋은 일이 곧 생길 거예요! 🌈", 
+    "당첨을 향해 조금씩 다가가고 있어요! 🚶‍♀️", "좋은 소식이 들릴 거예요! 📢", "조금만 더 기다려보세요! ⏳", 
+    "성공의 순간이 다가오고 있습니다! 🏆", "포기하지 마세요, 행운은 곧 올 거예요! 🍀", 
+    "오늘은 왠지 느낌이 좋아요! 😄", "이번엔 당첨될 거 같아요! 🎯", "좋은 일이 일어날 것 같아요! 🌟", 
+    "마음을 편히 가지고 행운을 기다리세요! 🧘‍♀️", "오늘은 행운의 날이에요! 🍀", "큰 성공이 다가오고 있어요! 🏆", 
+    "웃으며 기다리면 행운이 올 거예요! 😊", "행운은 언제나 준비된 사람에게 옵니다! 📅", "곧 좋은 소식이 들릴 거예요! 📢", 
+    "성공을 꿈꾸세요, 그 꿈은 이루어질 거예요! 🌠", "당첨의 기운이 느껴지네요! 🔮", "곧 좋은 일이 있을 거예요! 🌈", 
+    "기다림의 끝이 가까워지고 있어요! ⏳", "운명은 준비된 자의 것입니다! 🛠️", "오늘은 꼭 당첨되실 거예요! 🎉", 
+    "행운이 곧 찾아올 거예요! 🍀", "당신을 위한 행운이 다가오고 있어요! 🌠", "곧 좋은 소식이 있을 거예요! 📢", 
+    "포기하지 말고 계속 도전하세요! 💪", "성공은 조금씩 다가오고 있습니다! 🏆", "웃으며 기다려보세요, 행운이 올 거예요! 😊", 
+    "행운이 당신 곁에 머무를 거예요! 💖", "기분 좋은 하루 되세요! 😊", "당신을 위한 좋은 소식이 준비되고 있어요! 📢", 
+    "당첨될 그날이 곧 올 거예요! 🎯", "성공은 가까이에 있어요! 🏆", "오늘은 행운이 당신과 함께할 거예요! 🍀"
+];
+
+        let historyList = [];
+        let drawCount = 0; // 추첨 횟수를 추적하는 변수
+
+        function generateLottoNumbers() {
+            const numbers = [];
+            while (numbers.length < 6) {
+                const randNum = Math.floor(Math.random() * 45) + 1;
+                if (!numbers.includes(randNum)) {
+                    numbers.push(randNum);
+                }
+            }
+            numbers.sort((a, b) => a - b);
+
+            // 번호 표시
+            const lottoNumbersDiv = document.getElementById("lotto-numbers");
+            lottoNumbersDiv.innerHTML = '';
+            numbers.forEach((num, index) => {
+                const numberDiv = document.createElement("div");
+                numberDiv.className = "number";
+                numberDiv.textContent = num;
+                lottoNumbersDiv.appendChild(numberDiv);
+                setTimeout(() => {
+                    numberDiv.classList.add('show');
+                }, index * 100); // 번호들이 차례로 나타나게
+            });
+
+            // 추첨된 번호를 기록에 추가
+            drawCount++;
+            addToHistory(drawCount, numbers);
+
+            // 랜덤 문구 표시
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById("message").textContent = randomMessage;
+        }
+
+        function addToHistory(count, numbers) {
+            const historyDiv = document.getElementById("history");
+            const numberString = numbers.join(", ");
+            historyList.push(`${count}회차 : ${numberString}`);
+
+            const historyEntry = document.createElement("p");
+            historyEntry.textContent = `${count}회차 : ${numberString}`;
+            historyDiv.appendChild(historyEntry);
+
+            setTimeout(() => {
+                historyEntry.classList.add('show');
+            }, 100); // 기록이 부드럽게 나타나게
+
+            // 스크롤을 가장 아래로 자동으로 이동
+            historyDiv.scrollTop = historyDiv.scrollHeight;
+        }
+    </script>
+
+</body>
+</html>
