@@ -15,6 +15,21 @@
             align-items: center;
             height: 100vh;
         }
+        .card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+}
+
+.lotto-numbers {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    min-height: 100px;
+}
         .container {
             display: flex;
             background-color: #ffffff;
@@ -38,7 +53,20 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            min-height: 100px; /* 고정 높이 추가 */
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #ffffff;
+            color: #4CAF50;
+            border: 2px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px; /* 여백 설정 */
+            position: relative; /* 위치 고정 */
         }
         .number {
             font-size: 22px;
