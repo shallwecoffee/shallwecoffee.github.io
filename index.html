@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>좋은 말, 로또 번호 추첨기</title>
     <style>
+        /* 전체적인 레이아웃 스타일 */
         body {
             font-family: 'Noto Sans', sans-serif;
             background-color: #f0f0f5;
@@ -15,59 +16,62 @@
             align-items: center;
             height: 100vh;
         }
-        .card {
-    background-color: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-}
 
-.lotto-numbers {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    min-height: 100px;
-}
+        /* 카드 스타일 */
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        /* 컨테이너 설정 */
         .container {
             display: flex;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+            justify-content: space-between;
+            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
+
+        /* 반응형 디자인 (모바일 대응) */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .lotto-section, .history-section {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+
+        /* 로또 섹션 스타일 */
         .lotto-section {
-            padding: 40px;
-            text-align: center;
+            width: 60%;
+            padding: 20px;
             background-color: #4CAF50;
-            color: white;
-            border-right: 2px solid #ddd;
+            border-radius: 10px;
         }
+
         h1 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: white;
+            font-size: 2.5rem;
+            color: #4CAF50;
+            text-align: center;
         }
+
+        /* 로또 번호 스타일 */
         .lotto-numbers {
             display: flex;
             justify-content: center;
             gap: 15px;
             margin-bottom: 20px;
-            min-height: 100px; /* 고정 높이 추가 */
+            min-height: 100px;
         }
-        
-        .btn {
-            padding: 12px 24px;
-            font-size: 18px;
-            background-color: #ffffff;
-            color: #4CAF50;
-            border: 2px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 20px; /* 여백 설정 */
-            position: relative; /* 위치 고정 */
-        }
+
         .number {
             font-size: 22px;
             font-weight: bold;
@@ -82,31 +86,38 @@
             color: #4CAF50;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
+
+        /* 버튼 스타일 */
         .btn {
-            padding: 12px 24px;
+            width: 100%;
+            padding: 12px;
             font-size: 18px;
-            background-color: #ffffff;
+            text-align: center;
+            background-color: white;
             color: #4CAF50;
-            border: 2px solid white;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s, transform 0.2s;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
         }
+
+        .btn:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
         .btn:active {
             transform: scale(0.95);
         }
-        #message {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            color: white;
-        }
+
+        /* 추첨 기록 섹션 */
         .history-section {
-            padding: 40px;
-            width: 300px;
+            width: 35%;
+            padding: 20px;
             background-color: #ffffff;
-            color: #333;
+            border-radius: 10px;
         }
+
         .history-title {
             font-size: 1.5rem;
             font-weight: bold;
@@ -114,6 +125,7 @@
             color: #4CAF50;
             text-align: center;
         }
+
         .history {
             background-color: #f9f9f9;
             padding: 15px;
@@ -122,6 +134,8 @@
             overflow-y: auto;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+
+        /* 기록의 각 항목 애니메이션 */
         .history p {
             margin: 10px 0;
             font-size: 16px;
@@ -131,70 +145,65 @@
             transform: translateY(20px);
             transition: opacity 0.5s, transform 0.5s;
         }
+
         .history p.show {
             opacity: 1;
             transform: translateY(0);
         }
+
         /* 스크롤바 스타일 */
         .history::-webkit-scrollbar {
             width: 8px;
         }
+
         .history::-webkit-scrollbar-thumb {
             background-color: #4CAF50;
             border-radius: 4px;
+        }
+
+        /* 메세지 스타일 */
+        #message {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: white;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <!-- 로또 번호 추첨 섹션 -->
         <div class="lotto-section">
             <h1>좋은 말, 로또 번호 추첨기</h1>
             <div id="lotto-numbers" class="lotto-numbers"></div>
             <button class="btn" onclick="generateLottoNumbers()">번호 추첨하기</button>
             <div id="message"></div>
+            <button id="kakao-link-btn" class="btn">카카오톡으로 공유하기</button>
         </div>
-        
+
+        <!-- 추첨된 번호 기록 섹션 -->
         <div class="history-section">
             <div class="history-title">추첨된 번호 기록</div>
             <div id="history" class="history"></div>
         </div>
     </div>
 
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script>
+        // 카카오 API 초기화
+        Kakao.init('YOUR_JAVASCRIPT_KEY'); // 발급받은 JavaScript 키를 여기에 입력
+
         const messages = [
-    "오늘은 당첨운이! 🍀", "당첨 되셨으면 좋겠어요! 🎉", "좋은 날이 올꺼에요! 🌟", "행운을 기원해요! ✨",
-    "이번엔 느낌이 좋아요! 😄", "당첨까지 조금만 더! 💪", "행복한 하루 보내세요! 😊", "좋은 결과를 기다려요! 🌈",
-    "이번엔 꼭 맞을 거예요! 👍", "끝까지 포기하지 마세요! 🚀", "도전은 언제나 가치 있어요! 💥", 
-    "당첨의 기운이 느껴져요! 🔮", "언젠간 분명 될 거예요! 💫", "행운이 곧 당신에게 올 거예요! 🍀", 
-    "당첨되면 뭐 할지 생각해 보셨나요? 💭", "희망을 가지세요! 🌻", "성공의 길로 가고 있어요! 🏆", 
-    "행운은 준비된 자의 것! 📅", "이번엔 반드시! 🎯", "조금만 더 힘내세요! 💪", "매번 더 가까워지고 있어요! 🚶‍♂️", 
-    "기다리던 그날이 올 거예요! 📅", "행운이 당신 곁에! 💖", "마음속으로 소원을 빌어보세요! 🌠", 
-    "이제 곧 당신 차례예요! 👏", "믿고 기다려보세요! 🌟", "당첨될 운명이에요! 🎉", "언젠가는 꼭 이뤄질 거예요! 🌈", 
-    "오늘은 느낌이 다르네요! 🤞", "행복한 하루 보내세요! 😊", "마음 속으로 원하는 걸 생각해보세요! 💭", 
-    "행운이 올 때까지 포기하지 마세요! 💪", "성공의 순간이 다가오고 있어요! 🏆", "다음은 당신 차례일 거예요! 🎯", 
-    "당첨을 꿈꾸세요! 🌟", "운명은 스스로 만드는 거예요! 🛠️", "희망은 언제나 있어요! 🌻", 
-    "당신을 위한 행운이 오고 있어요! 🍀", "마지막까지 힘내세요! 💪", "웃는 얼굴로 기다려보세요! 😊", 
-    "행운이 곧 찾아올 거예요! 🌠", "행운은 노력하는 사람에게 옵니다! 📅", "당첨될 순간이 다가오고 있어요! 🏆", 
-    "좋은 소식이 들릴 거예요! 📢", "자신감을 가지고 도전하세요! 💪", "오늘은 행운이 가득할 거예요! 🍀", 
-    "마음을 편히 가지고 기다려보세요! 🧘‍♂️", "당신을 위한 행운이 준비되고 있어요! 🎉", "성공할 날이 다가오고 있어요! 🏆", 
-    "운명은 당신 손에 달려있어요! ✋", "기다림의 끝이 보입니다! 👀", "좋은 일이 곧 생길 거예요! 🌈", 
-    "당첨을 향해 조금씩 다가가고 있어요! 🚶‍♀️", "좋은 소식이 들릴 거예요! 📢", "조금만 더 기다려보세요! ⏳", 
-    "성공의 순간이 다가오고 있습니다! 🏆", "포기하지 마세요, 행운은 곧 올 거예요! 🍀", 
-    "오늘은 왠지 느낌이 좋아요! 😄", "이번엔 당첨될 거 같아요! 🎯", "좋은 일이 일어날 것 같아요! 🌟", 
-    "마음을 편히 가지고 행운을 기다리세요! 🧘‍♀️", "오늘은 행운의 날이에요! 🍀", "큰 성공이 다가오고 있어요! 🏆", 
-    "웃으며 기다리면 행운이 올 거예요! 😊", "행운은 언제나 준비된 사람에게 옵니다! 📅", "곧 좋은 소식이 들릴 거예요! 📢", 
-    "성공을 꿈꾸세요, 그 꿈은 이루어질 거예요! 🌠", "당첨의 기운이 느껴지네요! 🔮", "곧 좋은 일이 있을 거예요! 🌈", 
-    "기다림의 끝이 가까워지고 있어요! ⏳", "운명은 준비된 자의 것입니다! 🛠️", "오늘은 꼭 당첨되실 거예요! 🎉", 
-    "행운이 곧 찾아올 거예요! 🍀", "당신을 위한 행운이 다가오고 있어요! 🌠", "곧 좋은 소식이 있을 거예요! 📢", 
-    "포기하지 말고 계속 도전하세요! 💪", "성공은 조금씩 다가오고 있습니다! 🏆", "웃으며 기다려보세요, 행운이 올 거예요! 😊", 
-    "행운이 당신 곁에 머무를 거예요! 💖", "기분 좋은 하루 되세요! 😊", "당신을 위한 좋은 소식이 준비되고 있어요! 📢", 
-    "당첨될 그날이 곧 올 거예요! 🎯", "성공은 가까이에 있어요! 🏆", "오늘은 행운이 당신과 함께할 거예요! 🍀"
-];
+            "오늘은 당첨운이! 🍀", "당첨 되셨으면 좋겠어요! 🎉", "좋은 날이 올꺼에요! 🌟", "행운을 기원해요! ✨",
+            // 여러 응원 메시지 추가...
+        ];
 
         let historyList = [];
-        let drawCount = 0; // 추첨 횟수를 추적하는 변수
+        let drawCount = 0;
+        let lastLottoNumbers = []; // 최근 추첨된 번호 저장
 
+        // 로또 번호 생성 함수
         function generateLottoNumbers() {
             const numbers = [];
             while (numbers.length < 6) {
@@ -215,18 +224,21 @@
                 lottoNumbersDiv.appendChild(numberDiv);
                 setTimeout(() => {
                     numberDiv.classList.add('show');
-                }, index * 100); // 번호들이 차례로 나타나게
+                }, index * 100);
             });
 
-            // 추첨된 번호를 기록에 추가
+            lastLottoNumbers = numbers; // 최근 추첨된 번호 저장
+
+            // 추첨된 번호 기록 추가
             drawCount++;
             addToHistory(drawCount, numbers);
 
-            // 랜덤 문구 표시
+            // 랜덤 메시지 표시
             const randomMessage = messages[Math.floor(Math.random() * messages.length)];
             document.getElementById("message").textContent = randomMessage;
         }
 
+        // 기록에 추가하는 함수
         function addToHistory(count, numbers) {
             const historyDiv = document.getElementById("history");
             const numberString = numbers.join(", ");
@@ -238,11 +250,40 @@
 
             setTimeout(() => {
                 historyEntry.classList.add('show');
-            }, 100); // 기록이 부드럽게 나타나게
+            }, 100);
 
-            // 스크롤을 가장 아래로 자동으로 이동
+            // 스크롤을 자동으로 가장 아래로 이동
             historyDiv.scrollTop = historyDiv.scrollHeight;
         }
+
+        // 카카오톡 공유 함수
+        function shareOnKakao(lottoNumbers) {
+            Kakao.Link.sendDefault({
+                objectType: 'text',
+                text: `추첨된 로또 번호: ${lottoNumbers.join(', ')} 🎉`,
+                link: {
+                    mobileWebUrl: 'https://shallwecoffee.github.io',
+                    webUrl: 'https://shallwecoffee.github.io'
+                },
+                buttons: [
+                    {
+                        title: '로또 추첨기 확인하기',
+                        link: {
+                            mobileWebUrl: 'https://shallwecoffee.github.io',
+                            webUrl: 'https://shallwecoffee.github.io'
+                        }
+                    }
+                ]
+            });
+        }
+        // 카카오톡 공유 버튼 클릭 시 호출
+        document.getElementById('kakao-link-btn').addEventListener('click', function() {
+            if (lastLottoNumbers.length > 0) {
+                shareOnKakao(lastLottoNumbers);
+            } else {
+                alert('먼저 로또 번호를 추첨해 주세요!');
+            }
+        });
     </script>
 
 </body>
