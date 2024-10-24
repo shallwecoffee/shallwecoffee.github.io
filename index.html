@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로또 번호 추첨기</title>
+    <title>행운의 로또 번호 추첨기</title>
     <style>
         /* 전체 레이아웃 */
         body {
@@ -314,14 +314,14 @@
         function shareOnKakao(lottoNumbers) {
             Kakao.Link.sendDefault({
                 objectType: 'text',
-                text: `추천된 로또 번호: ${lottoNumbers.join(', ')} 🎁 당신을 위한 선물 번호입니다!`,
+                text: `선물받은 로또 번호: ${lottoNumbers.join(', ')} 🎁`,
                 link: {
                     mobileWebUrl: 'https://win2num.com',
                     webUrl: 'https://win2num.com'
                 },
                 buttons: [
                     {
-                        title: '추천번호 선물하기',
+                        title: '행운의 로또번호 선물하기',
                         link: {
                             mobileWebUrl: 'https://win2num.com',
                             webUrl: 'https://win2num.com'
