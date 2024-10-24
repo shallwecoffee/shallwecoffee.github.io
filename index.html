@@ -60,16 +60,22 @@
         .number {
             font-size: 22px;
             font-weight: bold;
-            background-color: white;
-            border: 2px solid #4CAF50;
             border-radius: 50%;
             width: 60px;
             height: 60px;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: #4CAF50;
+            color: white;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;  /* 초기에는 투명하게 시작 */
+            transform: translateY(20px);  /* 살짝 아래에 위치 */
+            transition: opacity 0.5s, transform 0.5s;  /* 서서히 나타나게 함 */
+        }
+
+        .number.show {
+            opacity: 1;  /* 나타나게 함 */
+            transform: translateY(0);  /* 원래 위치로 이동 */
         }
 
         .message {
@@ -97,7 +103,6 @@
             transform: scale(1.05);
         }
 
-        /* 기록 섹션 */
         .history-section {
             width: 35%;
             padding: 20px;
@@ -125,6 +130,14 @@
             margin: 10px 0;
             font-size: 16px;
             color: #555;
+            opacity: 0;  /* 초기에는 투명하게 시작 */
+            transform: translateY(20px);  /* 살짝 아래에 위치 */
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .history p.show {
+            opacity: 1;  /* 나타나게 함 */
+            transform: translateY(0);  /* 원래 위치로 이동 */
         }
 
         /* 카카오톡 공유 버튼 */
@@ -153,6 +166,13 @@
             width: 30px;
             height: 30px;
         }
+
+        /* 색상별 스타일 */
+        .yellow { background-color: rgba(255, 215, 0, 0.7); }  /* 연한 노란색 */
+        .blue { background-color: rgba(30, 144, 255, 0.7); }    /* 연한 파란색 */
+        .red { background-color: rgba(255, 69, 0, 0.7); }       /* 연한 빨간색 */
+        .gray { background-color: rgba(169, 169, 169, 0.7); }   /* 연한 회색 */
+        .green { background-color: rgba(50, 205, 50, 0.7); }    /* 연한 녹색 */
 
         /* 반응형 디자인: 모바일 화면에서 버튼 크기 조정 */
         @media (max-width: 768px) {
@@ -183,7 +203,7 @@
     <div class="container">
         <!-- 로또 번호 추첨 섹션 -->
         <div class="lotto-section">
-            <h1>로또 번호 추첨기</h1>
+            <h1>로또 번호 추첨기😎</h1>
             <div id="lotto-numbers" class="lotto-numbers">
                 <!-- 기본적으로 ?를 표시 -->
                 <div class="number">?</div>
@@ -193,13 +213,13 @@
                 <div class="number">?</div>
                 <div class="number">?</div>
             </div>
-            <div id="message" class="message">행운의 편지✉</div> <!-- 기본 메시지: 행운의 쪽지 -->
-            <button class="btn" onclick="generateLottoNumbers()">번호 추첨하기</button> <!-- 버튼은 상자 안에 고정 -->
+            <div id="message" class="message">행운의 쪽지🍀</div> <!-- 기본 메시지: 행운의 쪽지 -->
+            <button class="btn" onclick="generateLottoNumbers()">행운의 번호 뽑기</button> <!-- 버튼은 상자 안에 고정 -->
         </div>
 
         <!-- 기록 섹션 -->
         <div class="history-section">
-            <div class="history-title">추첨된 번호 기록📃 </div>
+            <div class="history-title">추첨된 번호 기록📃</div>
             <div id="history" class="history"></div>
         </div>
     </div>
@@ -230,16 +250,36 @@
                     numbers.push(randNum);
                 }
             }
+
             numbers.sort((a, b) => a - b);
 
             // 로또 번호 표시
             const lottoNumbersDiv = document.getElementById("lotto-numbers");
             lottoNumbersDiv.innerHTML = '';  // 기존의 ?를 지우고 새 번호 추가
-            numbers.forEach((num) => {
+            numbers.forEach((num, index) => {
                 const numberDiv = document.createElement("div");
                 numberDiv.className = "number";
+
+                // 색상을 번호 범위에 따라 지정
+                if (num >= 1 && num <= 10) {
+                    numberDiv.classList.add('yellow');
+                } else if (num >= 11 && num <= 20) {
+                    numberDiv.classList.add('blue');
+                } else if (num >= 21 && num <= 30) {
+                    numberDiv.classList.add('red');
+                } else if (num >= 31 && num <= 40) {
+                    numberDiv.classList.add('gray');
+                } else if (num >= 41 && num <= 45) {
+                    numberDiv.classList.add('green');
+                }
+
                 numberDiv.textContent = num;
                 lottoNumbersDiv.appendChild(numberDiv);
+
+                // 애니메이션을 단계적으로 나타나게
+                setTimeout(() => {
+                    numberDiv.classList.add('show');
+                }, index * 100);  // 100ms 간격으로 번호들이 나타남
             });
 
             lastLottoNumbers = numbers;
@@ -261,6 +301,11 @@
             historyEntry.textContent = `${count}회차 : ${numberString}`;
             historyDiv.appendChild(historyEntry);
 
+            // 애니메이션으로 서서히 나타나게
+            setTimeout(() => {
+                historyEntry.classList.add('show');
+            }, 100);
+
             // 스크롤을 가장 아래로 자동 이동
             historyDiv.scrollTop = historyDiv.scrollHeight;
         }
@@ -269,7 +314,7 @@
         function shareOnKakao(lottoNumbers) {
             Kakao.Link.sendDefault({
                 objectType: 'text',
-                text: `추천된 로또 번호: ${lottoNumbers.join(', ')} 🎁 당신을 위한 추천 로또 번호입니다!`,
+                text: `추천된 로또 번호: ${lottoNumbers.join(', ')} 🎁 당신을 위한 선물 번호입니다!`,
                 link: {
                     mobileWebUrl: 'https://win2num.com',
                     webUrl: 'https://win2num.com'
