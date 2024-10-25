@@ -1,24 +1,72 @@
-<script>
-    // 카카오 API 초기화
-    document.addEventListener('DOMContentLoaded', function () {
-        if (Kakao) {
-            console.log("Kakao API 로드 완료");
-            Kakao.init('68da393d98237fa8aa72645a55bd3388');
-            console.log("Kakao 초기화 완료");
-        } else {
-            console.error("Kakao API 로드 실패");
-        }
+const messages = {
+    luck: [
+        "오늘은 당첨운이! 🍀",
+        "대박 기운이 느껴져요! 💸",
+        "행운이 함께하길 바랍니다! 🍀"
+    ],
+    encouragement: [
+        "포기하지 마세요, 행운은 옵니다! 🔥",
+        "당신은 충분히 운이 좋을 자격이 있어요! 🍀",
+        "오늘도 힘내세요! 💪"
+    ],
+    cheer: [
+        "기분 좋은 일이 생길 거예요! 😊",
+        "행복한 하루 보내세요! 😊",
+        "좋은 일이 찾아올 거예요! 🌞"
+    ]
+};
+
+let messageHistory = [];
+
+function displayRandomMessage() {
+    const messageDiv = document.getElementById("message");
+    messageDiv.style.transition = 'opacity 1s ease-in-out'; // 먼저 transition을 설정해주어야 합니다.
+    messageDiv.style.opacity = 0;
+
+    setTimeout(() => {
+        const randomCategory = Object.keys(messages)[Math.floor(Math.random() * Object.keys(messages).length)];
+        const randomMessage = messages[randomCategory][Math.floor(Math.random() * messages[randomCategory].length)];
+        messageDiv.textContent = randomMessage;
+        messageDiv.style.opacity = 1; // 그 후에 opacity를 1로 설정해서 서서히 나타나도록 합니다.
+        messageHistory.push(randomMessage);
+    }, 300); // 300ms 후 메시지 표시
+}
+
+
+// 로또 번호 초기화 함수
+function initializeLottoNumbers() {
+    const lottoNumbersDiv = document.getElementById("lotto-numbers");
+    lottoNumbersDiv.innerHTML = ''; // 기존 내용을 초기화
+
+    for (let i = 0; i < 6; i++) {
+        const numberDiv = document.createElement("div");
+        numberDiv.className = "number show";
+        numberDiv.textContent = '?';
+        lottoNumbersDiv.appendChild(numberDiv);
+    }
+}
+
+// 로또 번호 생성 함수
+function generateLottoNumbers() {
+    const lottoNumbersDiv = document.getElementById("lotto-numbers");
+    const numberDivs = lottoNumbersDiv.querySelectorAll('.number');
+    const numbers = [];
+
+    // 슬롯머신 효과를 위한 setInterval 사용
+    const intervals = [];
+    numberDivs.forEach((div, index) => {
+        const interval = setInterval(() => {
+            const randomNum = Math.floor(Math.random() * 45) + 1;
+            div.textContent = randomNum;
+        }, 50 + index * 20); // 각 숫자가 조금씩 다르게 멈추도록 지연 시간 추가
+        intervals.push(interval);
     });
 
-    const messages = [
-        "오늘은 당첨운이!", "당첨 되셨으면 좋겠어요!", "좋은 날이 올 거예요!", "행운을 기원해요!"
-    ];
-
-    let lastLottoNumbers = [];
-
-    // 로또 번호 생성 함수
-    function generateLottoNumbers() {
-        const numbers = [];
+    // 0.5초 후 모든 번호를 멈춤
+    setTimeout(() => {
+        intervals.forEach(clearInterval); // 모든 setInterval 멈춤
+        
+        // 최종 번호 생성
         while (numbers.length < 6) {
             const randNum = Math.floor(Math.random() * 45) + 1;
             if (!numbers.includes(randNum)) {
@@ -28,76 +76,29 @@
 
         numbers.sort((a, b) => a - b);
 
-        // 로또 번호 표시
-        const lottoNumbersDiv = document.getElementById("lotto-numbers");
-        lottoNumbersDiv.innerHTML = '';  // 기존의 ?를 지우고 새 번호 추가
-        numbers.forEach((num, index) => {
-            const numberDiv = document.createElement("div");
-            numberDiv.className = "number";
-
+        // 최종 번호를 각 div에 설정
+        numberDivs.forEach((div, index) => {
+            div.textContent = numbers[index];
+            
             // 색상을 번호 범위에 따라 지정
-            if (num >= 1 && num <= 10) {
-                numberDiv.classList.add('yellow');
-            } else if (num >= 11 && num <= 20) {
-                numberDiv.classList.add('blue');
-            } else if (num >= 21 && num <= 30) {
-                numberDiv.classList.add('red');
-            } else if (num >= 31 && num <= 40) {
-                numberDiv.classList.add('gray');
-            } else if (num >= 41 && num <= 45) {
-                numberDiv.classList.add('green');
+            if (numbers[index] >= 1 && numbers[index] <= 10) {
+                div.className = 'number yellow show';
+            } else if (numbers[index] >= 11 && numbers[index] <= 20) {
+                div.className = 'number blue show';
+            } else if (numbers[index] >= 21 && numbers[index] <= 30) {
+                div.className = 'number red show';
+            } else if (numbers[index] >= 31 && numbers[index] <= 40) {
+                div.className = 'number gray show';
+            } else if (numbers[index] >= 41 && numbers[index] <= 45) {
+                div.className = 'number green show';
             }
-
-            numberDiv.textContent = num;
-            lottoNumbersDiv.appendChild(numberDiv);
-
-            // 애니메이션을 단계적으로 나타나게
-            setTimeout(() => {
-                numberDiv.classList.add('show');
-            }, index * 100);  // 100ms 간격으로 번호들이 나타남
         });
 
-        lastLottoNumbers = numbers;
+        // 랜덤 메시지 표시
+        displayRandomMessage();
 
-        // 랜덤한 좋은 말 표시 (행운의 쪽지 대신)
-        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-        console.log("랜덤 메시지:", randomMessage); // 로그 추가
-        document.getElementById("message").textContent = randomMessage;
-    }
+    }, 500); // 500ms 후 멈춤
+}
 
-    // 카카오톡 공유 함수
-    function shareOnKakao() {
-        const userMessage = document.getElementById('user-message').value || '행운의 번호를 공유합니다!';
-        if (lastLottoNumbers.length > 0) {
-            const lottoNumbers = lastLottoNumbers.join(', ');
-            if (Kakao) {
-                Kakao.Link.sendDefault({
-                    objectType: 'text',
-                    text: `선물받은 로또 번호: ${lottoNumbers}\n\n${userMessage}`,
-                    link: {
-                        mobileWebUrl: 'https://win2num.com',
-                        webUrl: 'https://win2num.com'
-                    },
-                    buttons: [
-                        {
-                            title: '나도 행운의 로또번호 선물하기',
-                            link: {
-                                mobileWebUrl: 'https://win2num.com',
-                                webUrl: 'https://win2num.com'
-                            }
-                        }
-                    ]
-                });
-            } else {
-                console.error("Kakao API가 초기화되지 않았습니다.");
-            }
-        } else {
-            alert('먼저 로또 번호를 추첨해 주세요!');
-        }
-    }
-
-    // 카카오톡 공유 버튼 클릭 시
-    document.getElementById('kakao-link-btn').addEventListener('click', function() {
-        shareOnKakao();
-    });
-</script>
+// 버튼 클릭 이벤트 리스너 추가
+document.getElementById('generate-btn').addEventListener('click', generateLottoNumbers);
