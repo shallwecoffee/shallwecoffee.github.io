@@ -1,9 +1,17 @@
 <script>
     // 카카오 API 초기화
-    Kakao.init('68da393d98237fa8aa72645a55bd3388');
+    document.addEventListener('DOMContentLoaded', function () {
+        if (Kakao) {
+            console.log("Kakao API 로드 완료");
+            Kakao.init('68da393d98237fa8aa72645a55bd3388');
+            console.log("Kakao 초기화 완료");
+        } else {
+            console.error("Kakao API 로드 실패");
+        }
+    });
 
     const messages = [
-        "오늘은 당첨운이! 🍀", "당첨 되셨으면 좋겠어요! 🎉", "좋은 날이 올 거예요! 🌟", "행운을 기원해요! ✨"
+        "오늘은 당첨운이!", "당첨 되셨으면 좋겠어요!", "좋은 날이 올 거예요!", "행운을 기원해요!"
     ];
 
     let lastLottoNumbers = [];
@@ -53,6 +61,7 @@
 
         // 랜덤한 좋은 말 표시 (행운의 쪽지 대신)
         const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        console.log("랜덤 메시지:", randomMessage); // 로그 추가
         document.getElementById("message").textContent = randomMessage;
     }
 
@@ -61,23 +70,27 @@
         const userMessage = document.getElementById('user-message').value || '행운의 번호를 공유합니다!';
         if (lastLottoNumbers.length > 0) {
             const lottoNumbers = lastLottoNumbers.join(', ');
-            Kakao.Link.sendDefault({
-                objectType: 'text',
-                text: `선물받은 로또 번호: ${lottoNumbers}\n\n${userMessage}`,
-                link: {
-                    mobileWebUrl: 'https://win2num.com',
-                    webUrl: 'https://win2num.com'
-                },
-                buttons: [
-                    {
-                        title: '나도 행운의 로또번호 선물하기',
-                        link: {
-                            mobileWebUrl: 'https://win2num.com',
-                            webUrl: 'https://win2num.com'
+            if (Kakao) {
+                Kakao.Link.sendDefault({
+                    objectType: 'text',
+                    text: `선물받은 로또 번호: ${lottoNumbers}\n\n${userMessage}`,
+                    link: {
+                        mobileWebUrl: 'https://win2num.com',
+                        webUrl: 'https://win2num.com'
+                    },
+                    buttons: [
+                        {
+                            title: '나도 행운의 로또번호 선물하기',
+                            link: {
+                                mobileWebUrl: 'https://win2num.com',
+                                webUrl: 'https://win2num.com'
+                            }
                         }
-                    }
-                ]
-            });
+                    ]
+                });
+            } else {
+                console.error("Kakao API가 초기화되지 않았습니다.");
+            }
         } else {
             alert('먼저 로또 번호를 추첨해 주세요!');
         }
