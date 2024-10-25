@@ -2,12 +2,9 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>행운의 로또 번호 추첨기</title>
-    <link rel="stylesheet" href="styles.css"> <!-- 스타일 분리 -->
-    <script src="https://developers.kakao.com/sdk/js/kakao.js" defer></script> <!-- 카카오 SDK 추가 및 로드 지연 -->
-    <script defer src="script.js"></script> <!-- 스크립트 분리 및 로드 지연 -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
@@ -16,23 +13,44 @@
             <h1>로또 번호 추첨기😎</h1>
             <div id="lotto-numbers" class="lotto-numbers">
                 <!-- 기본적으로 ?를 표시 -->
-                <div class="number white">?</div>
-                <div class="number white">?</div>
-                <div class="number white">?</div>
-                <div class="number white">?</div>
-                <div class="number white">?</div>
-                <div class="number white">?</div>
+                <div class="number show">?</div>
+                <div class="number show">?</div>
+                <div class="number show">?</div>
+                <div class="number show">?</div>
+                <div class="number show">?</div>
+                <div class="number show">?</div>
             </div>
-            <div id="message" class="message">행운의 쪽지</div> <!-- 기본 메시지: 행운의 쪽지 -->
-            <button class="btn" onclick="generateLottoNumbers()">행운의 번호 뽑기</button> <!-- 번호 추첨 버튼 -->
+            <div id="message" class="message">행운의 쪽지🍀</div> <!-- 기본 메시지: 행운의 쪽지 -->
+            <button id="generate-btn" class="btn">행운의 번호 뽑기</button> <!-- 번호 추첨 버튼 -->
+
             <!-- 메시지 입력 필드 -->
             <textarea id="user-message" rows="4" placeholder="카카오톡으로 보낼 메시지를 입력하세요"></textarea>
         </div>
     </div>
 
     <!-- 카카오톡 공유 버튼 -->
-    <button id="kakao-link-btn" class="kakao-btn" aria-label="카카오톡 공유 버튼">
+    <button id="kakao-link-btn" class="kakao-btn">
         <img src="https://cdn-icons-png.flaticon.com/512/3669/3669973.png" alt="카카오톡 공유" class="kakao-icon">
     </button>
+
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+        // Kakao SDK 초기화
+        Kakao.init('YOUR_APP_KEY'); // 여기에 실제 Kakao 앱 키를 입력하세요.
+
+        // 카카오톡 공유 버튼 클릭 이벤트 리스너
+        document.getElementById('kakao-link-btn').addEventListener('click', function() {
+            const userMessage = document.getElementById('user-message').value;
+            Kakao.Link.sendDefault({
+                objectType: 'text',
+                text: userMessage || '행운의 로또 번호를 확인해보세요! 🍀',
+                link: {
+                    mobileWebUrl: window.location.href,
+                    webUrl: window.location.href
+                }
+            });
+        });
+    </script>
+    <script src="script.js"></script>
 </body>
 </html>
