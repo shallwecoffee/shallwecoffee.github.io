@@ -1,88 +1,90 @@
-// Ä«Ä«¿À API ÃÊ±âÈ­
-Kakao.init('68da393d98237fa8aa72645a55bd3388');
+<script>
+    // ì¹´ì¹´ì˜¤ API ì´ˆê¸°í™”
+    Kakao.init('68da393d98237fa8aa72645a55bd3388');
 
-const messages = [
-    "¿À´ÃÀº ´çÃ·¿îÀÌ! ??", "´çÃ· µÇ¼ÌÀ¸¸é ÁÁ°Ú¾î¿ä! ??", "ÁÁÀº ³¯ÀÌ ¿Ã²¨¿¡¿ä! ??", "Çà¿îÀ» ±â¿øÇØ¿ä! ?"
-];
+    const messages = [
+        "ì˜¤ëŠ˜ì€ ë‹¹ì²¨ìš´ì´! ğŸ€", "ë‹¹ì²¨ ë˜ì…¨ìœ¼ë©´ ì¢‹ê² ì–´ìš”! ğŸ‰", "ì¢‹ì€ ë‚ ì´ ì˜¬ ê±°ì˜ˆìš”! ğŸŒŸ", "í–‰ìš´ì„ ê¸°ì›í•´ìš”! âœ¨"
+    ];
 
-let lastLottoNumbers = [];
+    let lastLottoNumbers = [];
 
-// ·Î¶Ç ¹øÈ£ »ı¼º ÇÔ¼ö
-function generateLottoNumbers() {
-    const numbers = [];
-    while (numbers.length < 6) {
-        const randNum = Math.floor(Math.random() * 45) + 1;
-        if (!numbers.includes(randNum)) {
-            numbers.push(randNum);
-        }
-    }
-
-    numbers.sort((a, b) => a - b);
-
-    // ·Î¶Ç ¹øÈ£ Ç¥½Ã
-    const lottoNumbersDiv = document.getElementById("lotto-numbers");
-    lottoNumbersDiv.innerHTML = '';  // ±âÁ¸ÀÇ ?¸¦ Áö¿ì°í »õ ¹øÈ£ Ãß°¡
-    numbers.forEach((num, index) => {
-        const numberDiv = document.createElement("div");
-        numberDiv.className = "number";
-
-        // »ö»óÀ» ¹øÈ£ ¹üÀ§¿¡ µû¶ó ÁöÁ¤
-        if (num >= 1 && num <= 10) {
-            numberDiv.classList.add('yellow');
-        } else if (num >= 11 && num <= 20) {
-            numberDiv.classList.add('blue');
-        } else if (num >= 21 && num <= 30) {
-            numberDiv.classList.add('red');
-        } else if (num >= 31 && num <= 40) {
-            numberDiv.classList.add('gray');
-        } else if (num >= 41 && num <= 45) {
-            numberDiv.classList.add('green');
+    // ë¡œë˜ ë²ˆí˜¸ ìƒì„± í•¨ìˆ˜
+    function generateLottoNumbers() {
+        const numbers = [];
+        while (numbers.length < 6) {
+            const randNum = Math.floor(Math.random() * 45) + 1;
+            if (!numbers.includes(randNum)) {
+                numbers.push(randNum);
+            }
         }
 
-        numberDiv.textContent = num;
-        lottoNumbersDiv.appendChild(numberDiv);
+        numbers.sort((a, b) => a - b);
 
-        // ¾Ö´Ï¸ŞÀÌ¼ÇÀ» ´Ü°èÀûÀ¸·Î ³ªÅ¸³ª°Ô
-        setTimeout(() => {
-            numberDiv.classList.add('show');
-        }, index * 100);  // 100ms °£°İÀ¸·Î ¹øÈ£µéÀÌ ³ªÅ¸³²
-    });
+        // ë¡œë˜ ë²ˆí˜¸ í‘œì‹œ
+        const lottoNumbersDiv = document.getElementById("lotto-numbers");
+        lottoNumbersDiv.innerHTML = '';  // ê¸°ì¡´ì˜ ?ë¥¼ ì§€ìš°ê³  ìƒˆ ë²ˆí˜¸ ì¶”ê°€
+        numbers.forEach((num, index) => {
+            const numberDiv = document.createElement("div");
+            numberDiv.className = "number";
 
-    lastLottoNumbers = numbers;
+            // ìƒ‰ìƒì„ ë²ˆí˜¸ ë²”ìœ„ì— ë”°ë¼ ì§€ì •
+            if (num >= 1 && num <= 10) {
+                numberDiv.classList.add('yellow');
+            } else if (num >= 11 && num <= 20) {
+                numberDiv.classList.add('blue');
+            } else if (num >= 21 && num <= 30) {
+                numberDiv.classList.add('red');
+            } else if (num >= 31 && num <= 40) {
+                numberDiv.classList.add('gray');
+            } else if (num >= 41 && num <= 45) {
+                numberDiv.classList.add('green');
+            }
 
-    // ·£´ıÇÑ ÁÁÀº ¸» Ç¥½Ã (Çà¿îÀÇ ÂÊÁö ´ë½Å)
-    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-    document.getElementById("message").textContent = randomMessage;
-}
+            numberDiv.textContent = num;
+            lottoNumbersDiv.appendChild(numberDiv);
 
-// Ä«Ä«¿ÀÅå °øÀ¯ ÇÔ¼ö
-function shareOnKakao() {
-    const userMessage = document.getElementById('user-message').value || 'Çà¿îÀÇ ¹øÈ£¸¦ °øÀ¯ÇÕ´Ï´Ù!';
-    if (lastLottoNumbers.length > 0) {
-        const lottoNumbers = lastLottoNumbers.join(', ');
-        Kakao.Link.sendDefault({
-            objectType: 'text',
-            text: `¼±¹°¹ŞÀº ·Î¶Ç ¹øÈ£: ${lottoNumbers}\n\n${userMessage}`,
-            link: {
-                mobileWebUrl: 'https://win2num.com',
-                webUrl: 'https://win2num.com'
-            },
-            buttons: [
-                {
-                    title: '³ªµµ Çà¿îÀÇ ·Î¶Ç¹øÈ£ ¼±¹°ÇÏ±â',
-                    link: {
-                        mobileWebUrl: 'https://win2num.com',
-                        webUrl: 'https://win2num.com'
-                    }
-                }
-            ]
+            // ì• ë‹ˆë©”ì´ì…˜ì„ ë‹¨ê³„ì ìœ¼ë¡œ ë‚˜íƒ€ë‚˜ê²Œ
+            setTimeout(() => {
+                numberDiv.classList.add('show');
+            }, index * 100);  // 100ms ê°„ê²©ìœ¼ë¡œ ë²ˆí˜¸ë“¤ì´ ë‚˜íƒ€ë‚¨
         });
-    } else {
-        alert('¸ÕÀú ·Î¶Ç ¹øÈ£¸¦ ÃßÃ·ÇØ ÁÖ¼¼¿ä!');
-    }
-}
 
-// Ä«Ä«¿ÀÅå °øÀ¯ ¹öÆ° Å¬¸¯ ½Ã
-document.getElementById('kakao-link-btn').addEventListener('click', function() {
-    shareOnKakao();
-});
+        lastLottoNumbers = numbers;
+
+        // ëœë¤í•œ ì¢‹ì€ ë§ í‘œì‹œ (í–‰ìš´ì˜ ìª½ì§€ ëŒ€ì‹ )
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        document.getElementById("message").textContent = randomMessage;
+    }
+
+    // ì¹´ì¹´ì˜¤í†¡ ê³µìœ  í•¨ìˆ˜
+    function shareOnKakao() {
+        const userMessage = document.getElementById('user-message').value || 'í–‰ìš´ì˜ ë²ˆí˜¸ë¥¼ ê³µìœ í•©ë‹ˆë‹¤!';
+        if (lastLottoNumbers.length > 0) {
+            const lottoNumbers = lastLottoNumbers.join(', ');
+            Kakao.Link.sendDefault({
+                objectType: 'text',
+                text: `ì„ ë¬¼ë°›ì€ ë¡œë˜ ë²ˆí˜¸: ${lottoNumbers}\n\n${userMessage}`,
+                link: {
+                    mobileWebUrl: 'https://win2num.com',
+                    webUrl: 'https://win2num.com'
+                },
+                buttons: [
+                    {
+                        title: 'ë‚˜ë„ í–‰ìš´ì˜ ë¡œë˜ë²ˆí˜¸ ì„ ë¬¼í•˜ê¸°',
+                        link: {
+                            mobileWebUrl: 'https://win2num.com',
+                            webUrl: 'https://win2num.com'
+                        }
+                    }
+                ]
+            });
+        } else {
+            alert('ë¨¼ì € ë¡œë˜ ë²ˆí˜¸ë¥¼ ì¶”ì²¨í•´ ì£¼ì„¸ìš”!');
+        }
+    }
+
+    // ì¹´ì¹´ì˜¤í†¡ ê³µìœ  ë²„íŠ¼ í´ë¦­ ì‹œ
+    document.getElementById('kakao-link-btn').addEventListener('click', function() {
+        shareOnKakao();
+    });
+</script>
