@@ -2,11 +2,12 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>행운의 로또 번호 추첨기</title>
     <link rel="stylesheet" href="styles.css"> <!-- 스타일 분리 -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.js" defer></script> <!-- 카카오 SDK 추가 및 로드 지연 -->
     <script defer src="script.js"></script> <!-- 스크립트 분리 및 로드 지연 -->
-    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script> <!-- 카카오 SDK 추가 -->
 </head>
 <body>
     <div class="container">
@@ -22,9 +23,8 @@
                 <div class="number white">?</div>
                 <div class="number white">?</div>
             </div>
-            <div id="message" class="message">행운의 쪽지🍀</div> <!-- 기본 메시지: 행운의 쪽지 -->
+            <div id="message" class="message">행운의 쪽지</div> <!-- 기본 메시지: 행운의 쪽지 -->
             <button class="btn" onclick="generateLottoNumbers()">행운의 번호 뽑기</button> <!-- 번호 추첨 버튼 -->
-
             <!-- 메시지 입력 필드 -->
             <textarea id="user-message" rows="4" placeholder="카카오톡으로 보낼 메시지를 입력하세요"></textarea>
         </div>
