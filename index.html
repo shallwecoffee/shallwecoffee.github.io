@@ -19,25 +19,18 @@
 
         .container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
             padding: 20px;
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* 반응형 설정 */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
         /* 로또 섹션 */
         .lotto-section {
-            width: 100%; /* 화면 너비를 100% 사용 */
-            margin: 2vw auto; /* 간격 유동적 조정 */
+            width: 100%;
+            max-width: 500px;
             padding: 20px;
             background-color: #4CAF50;
             border-radius: 10px;
@@ -46,14 +39,14 @@
         }
 
         h1 {
-             font-size: 2vw;
+            font-size: 2.5rem;
             color: #FFF;
         }
 
         .lotto-numbers {
             display: flex;
             justify-content: center;
-            gap: 5%;
+            gap: 15px;
             margin-bottom: 5px;
             height: 120px;  /* 고정된 높이 설정 */
         }
@@ -88,8 +81,8 @@
 
         .btn {
             margin-top: 10px;
-            padding: 2vw;  /* 패딩도 유동적으로 */
-            font-size: 1.5vw;  /* 화면 너비에 따른 버튼 크기 */
+            padding: 12px 24px;
+            font-size: 18px;
             background-color: #ffffff;
             color: #4CAF50;
             border: 2px solid white;
@@ -104,42 +97,12 @@
             transform: scale(1.05);
         }
 
-        .history-section {
-            width: 35%;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .history-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #4CAF50;
-        }
-
-        .history {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            height: 30vh; 
-            overflow-y: auto;
-        }
-
-        .history p {
-            margin: 10px 0;
-            font-size: 16px;
-            color: #555;
-            opacity: 0;  /* 초기에는 투명하게 시작 */
-            transform: translateY(20px);  /* 살짝 아래에 위치 */
-            transition: opacity 0.5s, transform 0.5s;
-        }
-
-        .history p.show {
-            opacity: 1;  /* 나타나게 함 */
-            transform: translateY(0);  /* 원래 위치로 이동 */
-        }
+        /* 색상별 스타일 */
+        .yellow { background-color: rgba(255, 215, 0, 0.7); }  /* 연한 노란색 */
+        .blue { background-color: rgba(30, 144, 255, 0.7); }    /* 연한 파란색 */
+        .red { background-color: rgba(255, 69, 0, 0.7); }       /* 연한 빨간색 */
+        .gray { background-color: rgba(169, 169, 169, 0.7); }   /* 연한 회색 */
+        .green { background-color: rgba(50, 205, 50, 0.7); }    /* 연한 녹색 */
 
         /* 카카오톡 공유 버튼 */
         .kakao-btn {
@@ -168,13 +131,6 @@
             height: 30px;
         }
 
-        /* 색상별 스타일 */
-        .yellow { background-color: rgba(255, 215, 0, 0.7); }  /* 연한 노란색 */
-        .blue { background-color: rgba(30, 144, 255, 0.7); }    /* 연한 파란색 */
-        .red { background-color: rgba(255, 69, 0, 0.7); }       /* 연한 빨간색 */
-        .gray { background-color: rgba(169, 169, 169, 0.7); }   /* 연한 회색 */
-        .green { background-color: rgba(50, 205, 50, 0.7); }    /* 연한 녹색 */
-
         /* 반응형 디자인: 모바일 화면에서 버튼 크기 조정 */
         @media (max-width: 768px) {
             .kakao-btn {
@@ -197,6 +153,18 @@
                 height: 20px;
             }
         }
+
+        /* 메시지 입력 필드 */
+        textarea {
+            width: 80%; /* 부모 요소에 대해 80%의 너비로 설정 */
+            max-width: 400px; /* 최대 너비를 설정해 너무 커지지 않도록 */
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            resize: none;
+            box-sizing: border-box; /* 패딩과 보더를 포함한 박스 크기 계산 */
+        }
     </style>
 </head>
 <body>
@@ -215,13 +183,10 @@
                 <div class="number">?</div>
             </div>
             <div id="message" class="message">행운의 쪽지🍀</div> <!-- 기본 메시지: 행운의 쪽지 -->
-            <button class="btn" onclick="generateLottoNumbers()">행운의 번호 뽑기</button> <!-- 버튼은 상자 안에 고정 -->
-        </div>
+            <button class="btn" onclick="generateLottoNumbers()">행운의 번호 뽑기</button> <!-- 번호 추첨 버튼 -->
 
-        <!-- 기록 섹션 -->
-        <div class="history-section">
-            <div class="history-title">추첨된 번호 기록📃</div>
-            <div id="history" class="history"></div>
+            <!-- 메시지 입력 필드 -->
+            <textarea id="user-message" rows="4" placeholder="카카오톡으로 보낼 메시지를 입력하세요"></textarea>
         </div>
     </div>
 
@@ -240,7 +205,6 @@
         ];
 
         let lastLottoNumbers = [];
-        let drawCount = 0;  // 추첨 횟수를 추적하는 변수
 
         // 로또 번호 생성 함수
         function generateLottoNumbers() {
@@ -288,57 +252,38 @@
             // 랜덤한 좋은 말 표시 (행운의 쪽지 대신)
             const randomMessage = messages[Math.floor(Math.random() * messages.length)];
             document.getElementById("message").textContent = randomMessage;
-
-            // 기록 추가
-            drawCount++;
-            addToHistory(drawCount, numbers);
-        }
-
-        // 기록 추가 함수
-        function addToHistory(count, numbers) {
-            const historyDiv = document.getElementById("history");
-            const numberString = numbers.join(", ");
-            const historyEntry = document.createElement("p");
-            historyEntry.textContent = `${count}회차 : ${numberString}`;
-            historyDiv.appendChild(historyEntry);
-
-            // 애니메이션으로 서서히 나타나게
-            setTimeout(() => {
-                historyEntry.classList.add('show');
-            }, 100);
-
-            // 스크롤을 가장 아래로 자동 이동
-            historyDiv.scrollTop = historyDiv.scrollHeight;
         }
 
         // 카카오톡 공유 함수
-        function shareOnKakao(lottoNumbers) {
-            Kakao.Link.sendDefault({
-                objectType: 'text',
-                text: `선물받은 로또 번호: ${lottoNumbers.join(', ')} 🎁`,
-                link: {
-                    mobileWebUrl: 'https://win2num.com',
-                    webUrl: 'https://win2num.com'
-                },
-                buttons: [
-                    {
-                        title: '나도 행운의 로또번호 선물하기',
-                        link: {
-                            mobileWebUrl: 'https://win2num.com',
-                            webUrl: 'https://win2num.com'
+        function shareOnKakao() {
+            const userMessage = document.getElementById('user-message').value;  // 사용자가 입력한 메시지
+            if (lastLottoNumbers.length > 0) {
+                const lottoNumbers = lastLottoNumbers.join(', ');
+                Kakao.Link.sendDefault({
+                    objectType: 'text',
+                    text: `선물받은 로또 번호: ${lottoNumbers}\n\n${userMessage}`,  // 번호와 사용자가 입력한 메시지 함께 전송
+                    link: {
+                        mobileWebUrl: 'https://win2num.com',
+                        webUrl: 'https://win2num.com'
+                    },
+                    buttons: [
+                        {
+                            title: '나도 행운의 로또번호 선물하기',
+                            link: {
+                                mobileWebUrl: 'https://win2num.com',
+                                webUrl: 'https://win2num.com'
+                            }
                         }
-                    }
-                ]
-            });
+                    ]
+                });
+            } else {
+                alert('먼저 로또 번호를 추첨해 주세요!');
+            }
         }
 
         // 카카오톡 공유 버튼 클릭 시
         document.getElementById('kakao-link-btn').addEventListener('click', function() {
-            if (lastLottoNumbers.length > 0) {
-                shareOnKakao(lastLottoNumbers);
-            } else {
-                alert('먼저 로또 번호를 추첨해 주세요!');
-            }
+            shareOnKakao();
         });
 
     </script>
