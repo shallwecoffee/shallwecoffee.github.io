@@ -1,162 +1,183 @@
-<style>
-    /* 전체 레이아웃 */
-    body {
-        font-family: 'Noto Sans KR', sans-serif;
-        background-color: #f0f0f5;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
+<style >
+/* 전체 레이아웃 */
+body {
+	font-family: 'Arial', 'Noto Sans KR', sans-serif;
+	background-color: #f0f0f5;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
 
-    .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+}
 
-    /* 로또 섹션 */
-    .lotto-section {
-        width: 100%;
-        max-width: 500px;
-        padding: 20px;
-        background-color: #4CAF50;
-        border-radius: 10px;
-        text-align: center;
-        min-height: 300px;  /* 상자 크기 고정 */
-    }
+/* 로또 섹션 */
+.lotto-section {
+	width: 100%;
+	max-width: 500px;
+	padding: 20px;
+	background-color: #4CAF50;
+	border-radius: 10px;
+	text-align: center;
+	min-height: 300px; /* 상자 크기 고정 */
+}
 
-    h1 {
-        font-size: 2.5rem;
-        color: #FFF;
-    }
+h1 {
+	font-size: 2.5rem;
+	color: #FFF;
+}
 
-    .lotto-numbers {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-bottom: 5px;
-        height: 120px;  /* 고정된 높이 설정 */
-    }
+.lotto-numbers {
+	display: flex;
+	justify-content: center;
+	gap: 15px;
+	margin-bottom: 5px;
+	height: 120px; /* 고정된 높이 설정 */
+}
 
-    .number {
-        font-size: 22px;
-        font-weight: bold;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-        opacity: 0;  /* 초기에는 투명하게 시작 */
-        transform: translateY(20px);  /* 살짝 아래에 위치 */
-        transition: opacity 0.5s, transform 0.5s;  /* 서서히 나타나게 함 */
-    }
+.number {
+	font-size: 22px;
+	font-weight: bold;
+	border-radius: 50%;
+	width: 60px;
+	height: 60px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+	opacity: 0; /* 초기에는 투명하게 시작 */
+	transform: translateY(20px); /* 살짝 아래에 위치 */
+	transition: opacity 0.5s, transform 0.5s; /* 서서히 나타나게 함 */
+}
 
-    .number.show {
-        opacity: 1;  /* 나타나게 함 */
-        transform: translateY(0);  /* 원래 위치로 이동 */
-    }
+	.number.show {
+		opacity: 1; /* 나타나게 함 */
+		transform: translateY(0); /* 원래 위치로 이동 */
+	}
 
-    .message {
-        margin-top: 5px;
-        font-size: 1.2rem;
-        color: white;
-        text-align: center;
-    }
+.message {
+	margin-top: 5px;
+	font-size: 1.2rem;
+	color: white;
+	text-align: center;
+}
 
-    .btn {
-        margin-top: 10px;
-        padding: 12px 24px;
-        font-size: 18px;
-        background-color: #ffffff;
-        color: #4CAF50;
-        border: 2px solid white;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s, color 0.3s, transform 0.2s;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-    }
+.btn {
+	margin-top: 10px;
+	padding: 12px 24px;
+	font-size: 18px;
+	background-color: #ffffff;
+	color: #4CAF50;
+	border: 2px solid white;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s, transform 0.2s;
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
 
-    .btn:hover {
-        background-color: #45a049;
-        transform: scale(1.05);
-    }
+	.btn:hover {
+		background-color: #45a049;
+		transform: scale(1.05);
+	}
 
-    /* 색상별 스타일 */
-    .yellow { background-color: rgba(255, 215, 0, 0.7); }
-    .blue { background-color: rgba(30, 144, 255, 0.7); }
-    .red { background-color: rgba(255, 69, 0, 0.7); }
-    .gray { background-color: rgba(169, 169, 169, 0.7); }
-    .green { background-color: rgba(50, 205, 50, 0.7); }
-    .white { background-color: rgba(255, 255, 255, 0.8); color: #333; }
+/* 색상별 스타일 */
+.yellow {
+	background-color: rgba(255, 215, 0, 0.7);
+}
 
-    /* 카카오톡 공유 버튼 */
-    .kakao-btn {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: #FEE500;
-        border: none;
-        border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s ease;
-    }
+.blue {
+	background-color: rgba(30, 144, 255, 0.7);
+}
 
-    .kakao-btn:hover {
-        transform: scale(1.1);
-    }
+.red {
+	background-color: rgba(255, 69, 0, 0.7);
+}
 
-    .kakao-icon {
-        width: 30px;
-        height: 30px;
-    }
+.gray {
+	background-color: rgba(169, 169, 169, 0.7);
+}
 
-    /* 반응형 디자인 */
-    @media (max-width: 768px) {
-        .kakao-btn {
-            width: 50px;
-            height: 50px;
-        }
-        .kakao-icon {
-            width: 25px;
-            height: 25px;
-        }
-    }
+.green {
+	background-color: rgba(50, 205, 50, 0.7);
+}
 
-    @media (max-width: 480px) {
-        .kakao-btn {
-            width: 40px;
-            height: 40px;
-        }
-        .kakao-icon {
-            width: 20px;
-            height: 20px;
-        }
-    }
+.white {
+	background-color: rgba(255, 255, 255, 0.8);
+	color: #333;
+}
 
-    textarea {
-        width: 80%;
-        max-width: 400px;
-        padding: 10px;
-        border-radius: 5px;
-        margin-top: 10px;
-        border: 1px solid #ccc;
-        resize: none;
-        box-sizing: border-box;
-    }
-</style>
+/* 카카오톡 공유 버튼 */
+.kakao-btn {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	background-color: #FEE500;
+	border: none;
+	border-radius: 50%;
+	width: 60px;
+	height: 60px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: transform 0.2s ease;
+}
+
+	.kakao-btn:hover {
+		transform: scale(1.1);
+	}
+
+.kakao-icon {
+	width: 30px;
+	height: 30px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+	.kakao-btn {
+		width: 50px;
+		height: 50px;
+	}
+
+	.kakao-icon {
+		width: 25px;
+		height: 25px;
+	}
+}
+
+@media (max-width: 480px) {
+	.kakao-btn {
+		width: 40px;
+		height: 40px;
+	}
+
+	.kakao-icon {
+		width: 20px;
+		height: 20px;
+	}
+}
+
+textarea {
+	width: 80%;
+	max-width: 400px;
+	padding: 10px;
+	border-radius: 5px;
+	margin-top: 10px;
+	border: 1px solid #ccc;
+	resize: none;
+	box-sizing: border-box;
+}
+
+</style >
